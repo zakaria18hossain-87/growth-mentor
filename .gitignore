@@ -13,3 +13,5 @@ next-env.d.ts
 .env*
 
 supabase/.temp/
+
+.next-dev/
