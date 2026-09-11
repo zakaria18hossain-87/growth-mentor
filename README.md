@@ -1,41 +1,60 @@
-# vibe-stack-supabase
+# Growth Mentor
 
-Next.js 15 + Supabase starter for shipping vibe-coded apps fast. Clone, provision, build.
+A working weekly reflection app that connects a ten-year vision to goals across Health, Soft Skills, Development, and Education.
 
-## Stack
+## What works
 
-| Layer | Choice |
-|---|---|
-| Framework | Next.js 15 (App Router, React 19, Server Actions) |
-| Language | TypeScript strict |
-| Styles | Tailwind CSS v4 (CSS-first, no config file) |
-| Auth + DB | Supabase (`@supabase/ssr`) |
-| Package manager | Bun |
-| Deploy | Vercel |
+- Create and edit a vision and its target year.
+- Create, edit, complete, archive, reactivate, and delete goals.
+- Score every active goal from 0–10 and add a weekly reflection.
+- Save a scorecard atomically, reopen it, and view its history.
+- See live pillar averages, an equally weighted overall score, vision alignment, and 4/8/12-week trends.
+- Use the dashboard and navigation on desktop or mobile.
 
-## Quick start
+This is the PRD's **shared, public demo**. Changes are shared between visitors. Authentication and private accounts remain later work, as specified in the PRD.
 
-```bash
-bun install
-cp .env.example .env.local   # fill in your Supabase keys
+## Development
+
+Use Node 22+ and Bun 1.4.2.
+
+```sh
+bun install --frozen-lockfile
+vercel link
+vercel env pull .env.local
 bun dev
 ```
 
-Open http://localhost:3000. Edit `app/page.tsx` to start building.
+The required environment variables are `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`. Keep environment files out of Git. The app does not require a service-role key or AI key.
 
-## Provisioning a new project
+## Database
 
-Use the `/new-vibe-project <name>` skill (see `claude-dotfiles` repo) which:
-1. Clones this template and renames it
-2. Creates a new GitHub repo and pushes
-3. Creates a Supabase project and injects URL + anon key
-4. Creates a Vercel project linked to the GitHub repo
-5. Triggers first deploy and returns the preview URL
+The migration in `supabase/migrations/202609110001_growth_mentor.sql` creates the four tables, shared-demo RLS, sample data, and the `submit_scorecard` transaction. It has been applied to the existing Growth Mentor project.
 
-## Working with AI
+For a new environment:
 
-See [CLAUDE.md](CLAUDE.md) for conventions. This repo is pre-wired for gstack — start with `/office-hours`.
+```sh
+supabase link --project-ref YOUR_PROJECT_REF
+supabase db push
+```
 
-## Switching to Neon
+All application queries live in `lib/data/`. Entry snapshots retain the title and pillar from submission time. Completing or archiving a goal retains history; explicitly deleting a goal removes its scores, with a warning in the UI.
 
-If you need Postgres without Supabase (e.g. prefer Drizzle ORM + Clerk for auth), a `vibe-stack-neon` variant is planned. For now: fork this and swap `@supabase/ssr` for `drizzle-orm` + `@neondatabase/serverless`, add Clerk or NextAuth.
+Weeks start Monday in UTC. Missing weeks remain blank. Overall score averages the available pillar averages, so a pillar with more goals does not have greater weight. Alignment is overall score divided by 10.
+
+## Checks
+
+```sh
+bun test:database
+bun run test
+bun run lint
+bun run typecheck
+bun run build
+```
+
+`bun run test:live` verifies a real anonymous transaction using the reserved week `2020-01-06`, then removes its temporary scorecard. It refuses to run if that week already contains data.
+
+## Deployment
+
+Deploy by pushing commits to `main`; do not use local-file Vercel deployments. Git author identity is pinned in this checkout. Vercel must be connected to `zakaria18hossain-87/growth-mentor` for pushes to trigger production builds.
+
+See `docs/IMPLEMENTATION_STATUS.md` for completed checks and deployment status.

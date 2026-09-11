@@ -13,12 +13,12 @@ Two individual contributors (the builder + colleague) who want to replace an exp
 - **Weekly Scorecards** — the core engine: a weekly snapshot of progress per goal/pillar with a self-reported score and notes.
 
 ## MVP (v1) — Must-Haves
-- [ ] Create/edit a 10-year Vision statement
-- [ ] Create long-term and short-term goals, each tagged to a pillar
-- [ ] Generate a weekly scorecard: score each active goal 0–10, add notes
-- [ ] View scorecard history (trend per pillar)
-- [ ] Dashboard showing current week summary + pillar averages
-- [ ] Seed demo data so app renders without login
+- [x] Create/edit a 10-year Vision statement
+- [x] Create long-term and short-term goals, each tagged to a pillar
+- [x] Generate a weekly scorecard: score each active goal 0–10, add notes
+- [x] View scorecard history (trend per pillar)
+- [x] Dashboard showing current week summary + pillar averages
+- [x] Seed demo data so app renders without login
 
 ## Non-Goals (v1)
 - No human-in-the-loop review or coaching intervention

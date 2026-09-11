@@ -1,4 +1,57 @@
-'use client';
-import {useActionState,useState} from 'react';
-import type {SaveState} from '@/app/scorecards/actions';
-export default function ActionButton({action,label,confirm}:{action:(state:SaveState)=>Promise<SaveState>;label:string;confirm?:string}){const [state,formAction,pending]=useActionState(action,{});const [confirming,setConfirming]=useState(false);return <div className="action-wrap">{confirm&&!confirming?<button type="button" className="button danger" onClick={()=>setConfirming(true)}>{label}</button>:<form action={formAction}>{confirm&&<p className="muted">{confirm}</p>}<button className={'button '+(confirm?'danger':'secondary')} disabled={pending}>{pending?'Saving…':confirm?'Delete permanently':label}</button>{confirm&&<button type="button" className="button secondary" onClick={()=>setConfirming(false)}>Cancel</button>}</form>}{state.error&&<p role="alert" className="notice error">{state.error}</p>}{state.success&&<p role="status" className="action-feedback">{state.success}</p>}</div>}
+"use client";
+import { useActionState, useState } from "react";
+import type { SaveState } from "@/app/scorecards/actions";
+export default function ActionButton({
+  action,
+  label,
+  confirm,
+}: {
+  action: (state: SaveState) => Promise<SaveState>;
+  label: string;
+  confirm?: string;
+}) {
+  const [state, formAction, pending] = useActionState(action, {});
+  const [confirming, setConfirming] = useState(false);
+  return (
+    <div className="action-wrap">
+      {confirm && !confirming ? (
+        <button
+          type="button"
+          className="button danger"
+          onClick={() => setConfirming(true)}
+        >
+          {label}
+        </button>
+      ) : (
+        <form action={formAction}>
+          {confirm && <p className="muted">{confirm}</p>}
+          <button
+            className={"button " + (confirm ? "danger" : "secondary")}
+            disabled={pending}
+          >
+            {pending ? "Saving…" : confirm ? "Delete permanently" : label}
+          </button>
+          {confirm && (
+            <button
+              type="button"
+              className="button secondary"
+              onClick={() => setConfirming(false)}
+            >
+              Cancel
+            </button>
+          )}
+        </form>
+      )}
+      {state.error && (
+        <p role="alert" className="notice error">
+          {state.error}
+        </p>
+      )}
+      {state.success && (
+        <p role="status" className="action-feedback">
+          {state.success}
+        </p>
+      )}
+    </div>
+  );
+}
